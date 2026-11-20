@@ -135,8 +135,8 @@ provável (com aviso de que não confirma o serviço real), medição de tempo e
 
 | Cenário | `-w 1` | Concorrente | Observação |
 |---|---|---|---|
-| 20 portas DROP, `-t 0.5` | 10,04&nbsp;s | 0,53&nbsp;s&nbsp;(`-w&nbsp;20`) | ganho de ~20×: o tempo é espera por timeout |
-| 5000 portas no loopback (RST < 1&nbsp;ms) | 1,10&nbsp;s | 2,49&nbsp;s&nbsp;(`-w&nbsp;50`) | sem ganho: custo das threads e do GIL supera a espera |
+| 20 portas DROP, `-t 0.5` | 10,04&nbsp;s | 0,53&nbsp;s (20&nbsp;threads) | ganho de ~20×: o tempo é espera por timeout |
+| 5000 portas no loopback (RST < 1&nbsp;ms) | 1,10&nbsp;s | 2,49&nbsp;s (50&nbsp;threads) | sem ganho: custo das threads e do GIL supera a espera |
 | 5000 portas, `-w 50` + CSV + `--log` | — | 9,65 s | gravar 5000 linhas de log em `/mnt/c` (disco do Windows no WSL) é lento |
 
 A concorrência compensa quando o tempo é dominado por espera na rede; em loopback com respostas imediatas, atrapalha.
