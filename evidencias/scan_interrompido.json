@@ -1,0 +1,34 @@
+{
+  "metadados": {
+    "destino": "127.0.0.1",
+    "ip": "127.0.0.1",
+    "inicio": "2026-11-20T17:42:49",
+    "portas_solicitadas": "9100-9119",
+    "timeout_s": 1.0,
+    "workers": 1,
+    "duracao_s": 2.412,
+    "interrompido": true,
+    "contagem": {
+      "ABERTA": 0,
+      "FECHADA": 0,
+      "TIMEOUT": 2,
+      "ERRO": 0
+    }
+  },
+  "resultados": [
+    {
+      "porta": 9100,
+      "estado": "TIMEOUT",
+      "detalhe": "sem resposta dentro do tempo limite",
+      "tempo_ms": 1001.67,
+      "servico_provavel": "-"
+    },
+    {
+      "porta": 9101,
+      "estado": "TIMEOUT",
+      "detalhe": "sem resposta dentro do tempo limite",
+      "tempo_ms": 1001.71,
+      "servico_provavel": "bacula-dir"
+    }
+  ]
+}

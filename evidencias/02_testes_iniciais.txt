@@ -1,0 +1,102 @@
+
+==================================================================
+## 2. Testes iniciais (secao 3.3)
+==================================================================
+
+$ python3 portscanner.py --help
+usage: portscanner.py [-h] [-p PORTAS] [-t TIMEOUT] [-w WORKERS] [-a]
+                      [-o ARQUIVO] [--log ARQUIVO]
+                      destino
+
+Scanner de portas TCP (TCP Connect) usando apenas sockets da biblioteca padrao.
+
+positional arguments:
+  destino               endereco IP (v4/v6) ou hostname do alvo
+
+options:
+  -h, --help            show this help message and exit
+  -p PORTAS, --portas PORTAS
+                        porta unica, intervalo ou lista. Ex.: 80 | 20-25 |
+                        22,80,8000-8010 (padrao: 1-1024)
+  -t TIMEOUT, --timeout TIMEOUT
+                        tempo limite de cada tentativa de conexao, em segundos
+                        (padrao: 1.0)
+  -w WORKERS, --workers WORKERS
+                        numero de portas testadas simultaneamente, 1..200
+                        (padrao: 1 = sequencial)
+  -a, --todas           mostrar todas as portas na tabela (por padrao,
+                        FECHADAS sao resumidas quando ha muitas)
+  -o ARQUIVO, --output ARQUIVO
+                        exportar resultados; o formato e definido pela
+                        extensao (.json ou .csv)
+  --log ARQUIVO         gravar log da execucao (cada tentativa e erros) neste
+                        arquivo
+
+Exemplos:
+  python3 portscanner.py 127.0.0.1 -p 22
+  python3 portscanner.py localhost -p 1-1024 -t 0.5 -w 50
+  python3 portscanner.py 127.0.0.1 -p 22,80,8000-8010 -o resultado.json --log scan.log
+Use apenas contra sistemas proprios ou expressamente autorizados.
+[codigo de saida: 0]
+
+$ python3 portscanner.py 127.0.0.1 -p 22,80,2222,3306,8080,9001,9002 -t 1 -o evidencias/scan_inicial.json --log evidencias/scan_inicial.log
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:42:40
+  [+] 2222/tcp ABERTA (-)
+  [+] 8080/tcp ABERTA (http-alt)
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 7   Timeout: 1.0s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1            22  FECHADA  ssh                     0.38  conexao recusada (RST recebido)
+127.0.0.1            80  FECHADA  http                    0.18  conexao recusada (RST recebido)
+127.0.0.1          2222  ABERTA   -                       0.12  conexao estabelecida (handshake completo)
+127.0.0.1          3306  FECHADA  mysql                   0.36  conexao recusada (RST recebido)
+127.0.0.1          8080  ABERTA   http-alt                0.99  conexao estabelecida (handshake completo)
+127.0.0.1          9001  TIMEOUT  -                    1001.79  sem resposta dentro do tempo limite
+127.0.0.1          9002  ERRO     -                       1.08  EHOSTUNREACH: No route to host
+--------------------------------------------------------------------------------------------
+Resumo: 2 aberta(s), 3 fechada(s), 1 timeout(s), 1 erro(s) - 7 de 7 porta(s) testada(s) em 1.053 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+Resultados exportados para evidencias/scan_inicial.json
+[codigo de saida: 0]
+
+$ python3 portscanner.py localhost -p 1-10000 -t 0.5 -w 100 -o evidencias/scan_1-10000.csv
+Iniciando varredura TCP Connect em localhost (127.0.0.1) - 2026-11-20T17:42:41
+  [+] 2222/tcp ABERTA (-)
+  [+] 8080/tcp ABERTA (http-alt)
+
+Destino: localhost (127.0.0.1)   Portas solicitadas: 10000   Timeout: 0.5s   Workers: 100
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          2222  ABERTA   -                       3.27  conexao estabelecida (handshake completo)
+127.0.0.1          8080  ABERTA   http-alt                5.79  conexao estabelecida (handshake completo)
+127.0.0.1          9001  TIMEOUT  -                     502.75  sem resposta dentro do tempo limite
+127.0.0.1          9002  ERRO     -                       7.56  EHOSTUNREACH: No route to host
+127.0.0.1          9100  TIMEOUT  -                     503.21  sem resposta dentro do tempo limite
+127.0.0.1          9101  TIMEOUT  bacula-dir            501.15  sem resposta dentro do tempo limite
+127.0.0.1          9102  TIMEOUT  bacula-fd             503.18  sem resposta dentro do tempo limite
+127.0.0.1          9103  TIMEOUT  bacula-sd             501.06  sem resposta dentro do tempo limite
+127.0.0.1          9104  TIMEOUT  -                     501.72  sem resposta dentro do tempo limite
+127.0.0.1          9105  TIMEOUT  -                     507.77  sem resposta dentro do tempo limite
+127.0.0.1          9106  TIMEOUT  -                     502.82  sem resposta dentro do tempo limite
+127.0.0.1          9107  TIMEOUT  -                     501.47  sem resposta dentro do tempo limite
+127.0.0.1          9108  TIMEOUT  -                     503.56  sem resposta dentro do tempo limite
+127.0.0.1          9109  TIMEOUT  -                     506.58  sem resposta dentro do tempo limite
+127.0.0.1          9110  TIMEOUT  -                     501.21  sem resposta dentro do tempo limite
+127.0.0.1          9111  TIMEOUT  -                     506.43  sem resposta dentro do tempo limite
+127.0.0.1          9112  TIMEOUT  -                     503.42  sem resposta dentro do tempo limite
+127.0.0.1          9113  TIMEOUT  -                     501.18  sem resposta dentro do tempo limite
+127.0.0.1          9114  TIMEOUT  -                     504.16  sem resposta dentro do tempo limite
+127.0.0.1          9115  TIMEOUT  -                     507.99  sem resposta dentro do tempo limite
+127.0.0.1          9116  TIMEOUT  -                     503.61  sem resposta dentro do tempo limite
+127.0.0.1          9117  TIMEOUT  -                     503.89  sem resposta dentro do tempo limite
+127.0.0.1          9118  TIMEOUT  -                     501.65  sem resposta dentro do tempo limite
+127.0.0.1          9119  TIMEOUT  -                     502.50  sem resposta dentro do tempo limite
+  ... 9976 portas FECHADAS omitidas (use -a para listar todas)
+--------------------------------------------------------------------------------------------
+Resumo: 2 aberta(s), 9976 fechada(s), 21 timeout(s), 1 erro(s) - 10000 de 10000 porta(s) testada(s) em 4.899 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+Resultados exportados para evidencias/scan_1-10000.csv
+[codigo de saida: 0]

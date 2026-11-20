@@ -1,0 +1,104 @@
+
+==================================================================
+## 6. Experimento de mudanca de estado (secao 6) - servico http.server na porta 8080
+==================================================================
+
+### Rodada A - servico ativo
+2026-11-20T17:42:58-03:00
+
+$ ss -tlnp sport = :8080
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+LISTEN 0      5            0.0.0.0:8080      0.0.0.0:*    users:(("python3",pid=662,fd=3))
+[codigo de saida: 0]
+
+$ python3 portscanner.py 127.0.0.1 -p 8080 -t 1 -o evidencias/rodada_A.json
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:42:58
+  [+] 8080/tcp ABERTA (http-alt)
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 1   Timeout: 1.0s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          8080  ABERTA   http-alt                0.35  conexao estabelecida (handshake completo)
+--------------------------------------------------------------------------------------------
+Resumo: 1 aberta(s), 0 fechada(s), 0 timeout(s), 0 erro(s) - 1 de 1 porta(s) testada(s) em 0.003 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+Resultados exportados para evidencias/rodada_A.json
+[codigo de saida: 0]
+
+$ nmap -sT --reason -p 8080 127.0.0.1
+Starting Nmap 7.80 ( https://nmap.org ) at 2026-11-20 17:42 -03
+Nmap scan report for localhost (127.0.0.1)
+Host is up, received localhost-response (0.00012s latency).
+
+PORT     STATE SERVICE    REASON
+8080/tcp open  http-proxy syn-ack
+
+Nmap done: 1 IP address (1 host up) scanned in 0.04 seconds
+[codigo de saida: 0]
+
+### Rodada B - servico interrompido (kill 662)
+2026-11-20T17:42:59-03:00
+
+$ ss -tlnp sport = :8080
+State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+[codigo de saida: 0]
+
+$ python3 portscanner.py 127.0.0.1 -p 8080 -t 1 -o evidencias/rodada_B.json
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:42:59
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 1   Timeout: 1.0s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          8080  FECHADA  http-alt                0.12  conexao recusada (RST recebido)
+--------------------------------------------------------------------------------------------
+Resumo: 0 aberta(s), 1 fechada(s), 0 timeout(s), 0 erro(s) - 1 de 1 porta(s) testada(s) em 0.001 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+Resultados exportados para evidencias/rodada_B.json
+[codigo de saida: 0]
+
+$ nmap -sT --reason -p 8080 127.0.0.1
+Starting Nmap 7.80 ( https://nmap.org ) at 2026-11-20 17:42 -03
+Nmap scan report for localhost (127.0.0.1)
+Host is up, received localhost-response (0.00017s latency).
+
+PORT     STATE  SERVICE    REASON
+8080/tcp closed http-proxy conn-refused
+
+Nmap done: 1 IP address (1 host up) scanned in 0.04 seconds
+[codigo de saida: 0]
+
+### Rodada C - servico reiniciado
+2026-11-20T17:43:00-03:00
+
+$ ss -tlnp sport = :8080
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+LISTEN 0      5            0.0.0.0:8080      0.0.0.0:*    users:(("python3",pid=913,fd=3))
+[codigo de saida: 0]
+
+$ python3 portscanner.py 127.0.0.1 -p 8080 -t 1 -o evidencias/rodada_C.json
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:43:00
+  [+] 8080/tcp ABERTA (http-alt)
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 1   Timeout: 1.0s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          8080  ABERTA   http-alt                0.30  conexao estabelecida (handshake completo)
+--------------------------------------------------------------------------------------------
+Resumo: 1 aberta(s), 0 fechada(s), 0 timeout(s), 0 erro(s) - 1 de 1 porta(s) testada(s) em 0.002 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+Resultados exportados para evidencias/rodada_C.json
+[codigo de saida: 0]
+
+$ nmap -sT --reason -p 8080 127.0.0.1
+Starting Nmap 7.80 ( https://nmap.org ) at 2026-11-20 17:43 -03
+Nmap scan report for localhost (127.0.0.1)
+Host is up, received localhost-response (0.00023s latency).
+
+PORT     STATE SERVICE    REASON
+8080/tcp open  http-proxy syn-ack
+
+Nmap done: 1 IP address (1 host up) scanned in 0.04 seconds
+[codigo de saida: 0]

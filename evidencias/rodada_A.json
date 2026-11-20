@@ -1,0 +1,27 @@
+{
+  "metadados": {
+    "destino": "127.0.0.1",
+    "ip": "127.0.0.1",
+    "inicio": "2026-11-20T17:42:58",
+    "portas_solicitadas": "8080",
+    "timeout_s": 1.0,
+    "workers": 1,
+    "duracao_s": 0.003,
+    "interrompido": false,
+    "contagem": {
+      "ABERTA": 1,
+      "FECHADA": 0,
+      "TIMEOUT": 0,
+      "ERRO": 0
+    }
+  },
+  "resultados": [
+    {
+      "porta": 8080,
+      "estado": "ABERTA",
+      "detalhe": "conexao estabelecida (handshake completo)",
+      "tempo_ms": 0.35,
+      "servico_provavel": "http-alt"
+    }
+  ]
+}

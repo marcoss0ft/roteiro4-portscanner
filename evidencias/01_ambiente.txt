@@ -1,0 +1,28 @@
+
+==================================================================
+## 0. Ambiente
+==================================================================
+2026-11-20T17:42:37-03:00
+Linux 6.18.58.1-microsoft-standard-WSL2
+Python 3.10.12
+Nmap version 7.80 ( https://nmap.org )
+
+==================================================================
+## 1. Montagem do ambiente de teste
+==================================================================
+
+$ ss -tlnp
+State  Recv-Q Send-Q  Local Address:Port Peer Address:PortProcess                                   
+LISTEN 0      50            0.0.0.0:2222      0.0.0.0:*    users:(("python3",pid=667,fd=3))         
+LISTEN 0      4096    127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=132,fd=14))
+LISTEN 0      1000   10.255.255.254:53        0.0.0.0:*                                             
+LISTEN 0      5             0.0.0.0:8080      0.0.0.0:*    users:(("python3",pid=662,fd=3))         
+[codigo de saida: 0]
+
+$ iptables -L INPUT -n --line-numbers
+Chain INPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+1    DROP       tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:9001
+2    REJECT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:9002 reject-with icmp-host-unreachable
+3    DROP       tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpts:9100:9119
+[codigo de saida: 0]

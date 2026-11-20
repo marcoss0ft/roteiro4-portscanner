@@ -1,0 +1,27 @@
+{
+  "metadados": {
+    "destino": "127.0.0.1",
+    "ip": "127.0.0.1",
+    "inicio": "2026-11-20T17:42:59",
+    "portas_solicitadas": "8080",
+    "timeout_s": 1.0,
+    "workers": 1,
+    "duracao_s": 0.001,
+    "interrompido": false,
+    "contagem": {
+      "ABERTA": 0,
+      "FECHADA": 1,
+      "TIMEOUT": 0,
+      "ERRO": 0
+    }
+  },
+  "resultados": [
+    {
+      "porta": 8080,
+      "estado": "FECHADA",
+      "detalhe": "conexao recusada (RST recebido)",
+      "tempo_ms": 0.12,
+      "servico_provavel": "http-alt"
+    }
+  ]
+}

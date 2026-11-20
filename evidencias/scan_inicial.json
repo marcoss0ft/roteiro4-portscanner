@@ -1,0 +1,69 @@
+{
+  "metadados": {
+    "destino": "127.0.0.1",
+    "ip": "127.0.0.1",
+    "inicio": "2026-11-20T17:42:40",
+    "portas_solicitadas": "22,80,2222,3306,8080,9001,9002",
+    "timeout_s": 1.0,
+    "workers": 1,
+    "duracao_s": 1.053,
+    "interrompido": false,
+    "contagem": {
+      "ABERTA": 2,
+      "FECHADA": 3,
+      "TIMEOUT": 1,
+      "ERRO": 1
+    }
+  },
+  "resultados": [
+    {
+      "porta": 22,
+      "estado": "FECHADA",
+      "detalhe": "conexao recusada (RST recebido)",
+      "tempo_ms": 0.38,
+      "servico_provavel": "ssh"
+    },
+    {
+      "porta": 80,
+      "estado": "FECHADA",
+      "detalhe": "conexao recusada (RST recebido)",
+      "tempo_ms": 0.18,
+      "servico_provavel": "http"
+    },
+    {
+      "porta": 2222,
+      "estado": "ABERTA",
+      "detalhe": "conexao estabelecida (handshake completo)",
+      "tempo_ms": 0.12,
+      "servico_provavel": "-"
+    },
+    {
+      "porta": 3306,
+      "estado": "FECHADA",
+      "detalhe": "conexao recusada (RST recebido)",
+      "tempo_ms": 0.36,
+      "servico_provavel": "mysql"
+    },
+    {
+      "porta": 8080,
+      "estado": "ABERTA",
+      "detalhe": "conexao estabelecida (handshake completo)",
+      "tempo_ms": 0.99,
+      "servico_provavel": "http-alt"
+    },
+    {
+      "porta": 9001,
+      "estado": "TIMEOUT",
+      "detalhe": "sem resposta dentro do tempo limite",
+      "tempo_ms": 1001.79,
+      "servico_provavel": "-"
+    },
+    {
+      "porta": 9002,
+      "estado": "ERRO",
+      "detalhe": "EHOSTUNREACH: No route to host",
+      "tempo_ms": 1.08,
+      "servico_provavel": "-"
+    }
+  ]
+}

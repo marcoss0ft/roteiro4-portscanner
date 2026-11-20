@@ -1,0 +1,14 @@
+# Nmap 7.80 scan initiated Fri Nov 20 17:42:54 2026 as: nmap -sT --reason -p 22,80,2222,3306,8080,9001,9002 -oN evidencias/comparacao_nmap.nmap 127.0.0.1
+Nmap scan report for localhost (127.0.0.1)
+Host is up, received localhost-response (0.00099s latency).
+
+PORT     STATE    SERVICE      REASON
+22/tcp   closed   ssh          conn-refused
+80/tcp   closed   http         conn-refused
+2222/tcp open     EtherNetIP-1 syn-ack
+3306/tcp closed   mysql        conn-refused
+8080/tcp open     http-proxy   syn-ack
+9001/tcp filtered tor-orport   no-response
+9002/tcp filtered dynamid      host-unreach
+
+# Nmap done at Fri Nov 20 17:42:55 2026 -- 1 IP address (1 host up) scanned in 1.35 seconds

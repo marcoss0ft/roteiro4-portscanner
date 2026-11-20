@@ -1,0 +1,51 @@
+
+==================================================================
+## 4. Validacao com Nmap (secao 5) - mesmas portas, mesmo alvo
+==================================================================
+
+$ ss -tlnp
+State  Recv-Q Send-Q  Local Address:Port Peer Address:PortProcess                                   
+LISTEN 0      50            0.0.0.0:2222      0.0.0.0:*    users:(("python3",pid=667,fd=3))         
+LISTEN 0      4096    127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=132,fd=14))
+LISTEN 0      1000   10.255.255.254:53        0.0.0.0:*                                             
+LISTEN 0      5             0.0.0.0:8080      0.0.0.0:*    users:(("python3",pid=662,fd=3))         
+[codigo de saida: 0]
+
+$ python3 portscanner.py 127.0.0.1 -p 22,80,2222,3306,8080,9001,9002 -t 1 -o evidencias/comparacao_scanner.json
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:42:52
+  [+] 2222/tcp ABERTA (-)
+  [+] 8080/tcp ABERTA (http-alt)
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 7   Timeout: 1.0s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1            22  FECHADA  ssh                     0.24  conexao recusada (RST recebido)
+127.0.0.1            80  FECHADA  http                    0.16  conexao recusada (RST recebido)
+127.0.0.1          2222  ABERTA   -                       0.10  conexao estabelecida (handshake completo)
+127.0.0.1          3306  FECHADA  mysql                   0.07  conexao recusada (RST recebido)
+127.0.0.1          8080  ABERTA   http-alt                0.14  conexao estabelecida (handshake completo)
+127.0.0.1          9001  TIMEOUT  -                    1001.56  sem resposta dentro do tempo limite
+127.0.0.1          9002  ERRO     -                       0.47  EHOSTUNREACH: No route to host
+--------------------------------------------------------------------------------------------
+Resumo: 2 aberta(s), 3 fechada(s), 1 timeout(s), 1 erro(s) - 7 de 7 porta(s) testada(s) em 1.006 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+Resultados exportados para evidencias/comparacao_scanner.json
+[codigo de saida: 0]
+
+$ nmap -sT --reason -p 22,80,2222,3306,8080,9001,9002 -oN evidencias/comparacao_nmap.nmap 127.0.0.1
+Starting Nmap 7.80 ( https://nmap.org ) at 2026-11-20 17:42 -03
+Nmap scan report for localhost (127.0.0.1)
+Host is up, received localhost-response (0.00099s latency).
+
+PORT     STATE    SERVICE      REASON
+22/tcp   closed   ssh          conn-refused
+80/tcp   closed   http         conn-refused
+2222/tcp open     EtherNetIP-1 syn-ack
+3306/tcp closed   mysql        conn-refused
+8080/tcp open     http-proxy   syn-ack
+9001/tcp filtered tor-orport   no-response
+9002/tcp filtered dynamid      host-unreach
+
+Nmap done: 1 IP address (1 host up) scanned in 1.35 seconds
+[codigo de saida: 0]

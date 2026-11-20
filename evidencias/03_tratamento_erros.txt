@@ -1,0 +1,100 @@
+
+==================================================================
+## 3. Tratamento de erros (secao 4)
+==================================================================
+--- 3.1 porta com servico ativo / 3.2 porta sem servico / 3.6 timeout
+
+$ python3 portscanner.py 127.0.0.1 -p 8080,3306,9001 -t 1
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:42:46
+  [+] 8080/tcp ABERTA (http-alt)
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 3   Timeout: 1.0s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          3306  FECHADA  mysql                   0.24  conexao recusada (RST recebido)
+127.0.0.1          8080  ABERTA   http-alt                0.10  conexao estabelecida (handshake completo)
+127.0.0.1          9001  TIMEOUT  -                    1001.81  sem resposta dentro do tempo limite
+--------------------------------------------------------------------------------------------
+Resumo: 1 aberta(s), 1 fechada(s), 1 timeout(s), 0 erro(s) - 3 de 3 porta(s) testada(s) em 1.004 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+[codigo de saida: 0]
+--- 3.3 numero de porta invalido
+
+$ python3 portscanner.py 127.0.0.1 -p 70000
+Erro: porta invalida 70000: deve estar entre 1 e 65535.
+[codigo de saida: 2]
+
+$ python3 portscanner.py 127.0.0.1 -p 0
+Erro: porta invalida 0: deve estar entre 1 e 65535.
+[codigo de saida: 2]
+
+$ python3 portscanner.py 127.0.0.1 -p abc
+Erro: porta invalida 'abc': use apenas numeros inteiros.
+[codigo de saida: 2]
+--- 3.4 intervalo de portas invalido
+
+$ python3 portscanner.py 127.0.0.1 -p 100-50
+Erro: intervalo invalido '100-50': a porta inicial (100) e maior que a final (50).
+[codigo de saida: 2]
+
+$ python3 portscanner.py 127.0.0.1 -p 1-2-3
+Erro: intervalo invalido '1-2-3': use o formato INICIO-FIM.
+[codigo de saida: 2]
+
+$ python3 portscanner.py 127.0.0.1 -p 80,,81
+Erro: lista de portas mal formada: '80,,81'.
+[codigo de saida: 2]
+--- 3.5 endereco de destino invalido
+
+$ python3 portscanner.py host-que-nao-existe.invalid -p 80
+Erro: destino invalido ou nao resolvido 'host-que-nao-existe.invalid': Name or service not known.
+[codigo de saida: 2]
+
+$ python3 portscanner.py 999.1.1.1 -p 80
+Erro: destino invalido '999.1.1.1': endereco IPv4 mal formado.
+[codigo de saida: 2]
+--- parametros invalidos de timeout / workers / exportacao
+
+$ python3 portscanner.py 127.0.0.1 -p 80 -t 0
+usage: portscanner.py [-h] [-p PORTAS] [-t TIMEOUT] [-w WORKERS] [-a]
+                      [-o ARQUIVO] [--log ARQUIVO]
+                      destino
+portscanner.py: error: argument -t/--timeout: timeout invalido 0.0: deve estar entre 0 (exclusivo) e 60 s.
+[codigo de saida: 2]
+
+$ python3 portscanner.py 127.0.0.1 -p 80 -t abc
+usage: portscanner.py [-h] [-p PORTAS] [-t TIMEOUT] [-w WORKERS] [-a]
+                      [-o ARQUIVO] [--log ARQUIVO]
+                      destino
+portscanner.py: error: argument -t/--timeout: timeout invalido 'abc': informe um numero em segundos.
+[codigo de saida: 2]
+
+$ python3 portscanner.py 127.0.0.1 -p 80 -w 0
+usage: portscanner.py [-h] [-p PORTAS] [-t TIMEOUT] [-w WORKERS] [-a]
+                      [-o ARQUIVO] [--log ARQUIVO]
+                      destino
+portscanner.py: error: argument -w/--workers: workers invalido 0: deve estar entre 1 e 200.
+[codigo de saida: 2]
+
+$ python3 portscanner.py 127.0.0.1 -p 80 -o saida.txt
+Erro: formato de exportacao desconhecido: use extensao .json ou .csv.
+[codigo de saida: 2]
+--- 3.7 interrupcao pelo usuario (SIGINT = Ctrl+C enviado apos 2,5 s)
+    20 portas filtradas, timeout 1 s, sequencial -> levaria ~20 s
+
+$ timeout --preserve-status -s INT 2.5 python3 portscanner.py 127.0.0.1 -p 9100-9119 -t 1 -o evidencias/scan_interrompido.json
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:42:49
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 20   Timeout: 1.0s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          9100  TIMEOUT  -                    1001.67  sem resposta dentro do tempo limite
+127.0.0.1          9101  TIMEOUT  bacula-dir           1001.71  sem resposta dentro do tempo limite
+--------------------------------------------------------------------------------------------
+Resumo: 0 aberta(s), 0 fechada(s), 2 timeout(s), 0 erro(s) - 2 de 20 porta(s) testada(s) em 2.412 s
+ATENCAO: varredura interrompida pelo usuario; resultados PARCIAIS.
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+Resultados exportados para evidencias/scan_interrompido.json
+[codigo de saida: 130]

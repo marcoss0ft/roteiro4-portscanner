@@ -1,0 +1,9 @@
+2026-11-20 17:42:40,060 INFO inicio destino=127.0.0.1 ip=127.0.0.1 portas=22,80,2222,3306,8080,9001,9002 timeout=1.0 workers=1
+2026-11-20 17:42:40,062 INFO porta=22 estado=FECHADA tempo_ms=0.38 detalhe=conexao recusada (RST recebido)
+2026-11-20 17:42:40,064 INFO porta=80 estado=FECHADA tempo_ms=0.18 detalhe=conexao recusada (RST recebido)
+2026-11-20 17:42:40,065 INFO porta=2222 estado=ABERTA tempo_ms=0.12 detalhe=conexao estabelecida (handshake completo)
+2026-11-20 17:42:40,069 INFO porta=3306 estado=FECHADA tempo_ms=0.36 detalhe=conexao recusada (RST recebido)
+2026-11-20 17:42:40,105 INFO porta=8080 estado=ABERTA tempo_ms=0.99 detalhe=conexao estabelecida (handshake completo)
+2026-11-20 17:42:41,108 INFO porta=9001 estado=TIMEOUT tempo_ms=1001.79 detalhe=sem resposta dentro do tempo limite
+2026-11-20 17:42:41,111 INFO porta=9002 estado=ERRO tempo_ms=1.08 detalhe=EHOSTUNREACH: No route to host
+2026-11-20 17:42:41,114 INFO fim duracao_s=1.053 contagem={'ABERTA': 2, 'FECHADA': 3, 'TIMEOUT': 1, 'ERRO': 1} interrompido=False

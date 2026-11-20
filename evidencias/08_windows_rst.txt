@@ -1,0 +1,36 @@
+## 8. Mesmo scanner executado no Windows 11 (Python 3.12.10), alvo 127.0.0.1 do Windows
+2026-11-20T17:43:25-03:00
+
+$ python portscanner.py 127.0.0.1 -p 135,445,3306 -t 1
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:43:26
+  [+] 135/tcp ABERTA (epmap)
+  [+] 445/tcp ABERTA (microsoft-ds)
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 3   Timeout: 1.0s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1           135  ABERTA   epmap                  23.50  conexao estabelecida (handshake completo)
+127.0.0.1           445  ABERTA   microsoft-ds            1.16  conexao estabelecida (handshake completo)
+127.0.0.1          3306  TIMEOUT  -                    1001.37  sem resposta dentro do tempo limite
+--------------------------------------------------------------------------------------------
+Resumo: 2 aberta(s), 0 fechada(s), 1 timeout(s), 0 erro(s) - 3 de 3 porta(s) testada(s) em 1.045 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+[codigo de saida: 0]
+
+$ python portscanner.py 127.0.0.1 -p 3306 -t 3
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:43:27
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 1   Timeout: 3.0s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          3306  FECHADA  -                    2059.01  conexao recusada (RST recebido)
+--------------------------------------------------------------------------------------------
+Resumo: 0 aberta(s), 1 fechada(s), 0 timeout(s), 0 erro(s) - 1 de 1 porta(s) testada(s) em 2.080 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+[codigo de saida: 0]
+
+$ netstat -ano -p tcp | findstr LISTENING | findstr ":135 :445 :3306"
+  TCP    0.0.0.0:135            0.0.0.0:0              LISTENING       1564
+  TCP    0.0.0.0:445            0.0.0.0:0              LISTENING       4

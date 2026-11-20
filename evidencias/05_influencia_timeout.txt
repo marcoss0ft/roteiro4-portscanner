@@ -1,0 +1,52 @@
+
+==================================================================
+## 5. Influencia do timeout: atraso artificial de 300 ms em cada pacote (tc netem no loopback)
+==================================================================
+
+$ tc qdisc show dev lo
+qdisc netem 8002: root refcnt 2 limit 1000 delay 300ms
+[codigo de saida: 0]
+--- timeout 0.2 s (menor que o RTT de ~600 ms)
+
+$ python3 portscanner.py 127.0.0.1 -p 8080,3306 -t 0.2
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:42:55
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 2   Timeout: 0.2s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          3306  TIMEOUT  mysql                 200.90  sem resposta dentro do tempo limite
+127.0.0.1          8080  TIMEOUT  http-alt              200.65  sem resposta dentro do tempo limite
+--------------------------------------------------------------------------------------------
+Resumo: 0 aberta(s), 0 fechada(s), 2 timeout(s), 0 erro(s) - 2 de 2 porta(s) testada(s) em 0.403 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+[codigo de saida: 0]
+--- timeout 2 s (maior que o RTT)
+
+$ python3 portscanner.py 127.0.0.1 -p 8080,3306 -t 2
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:42:56
+  [+] 8080/tcp ABERTA (http-alt)
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 2   Timeout: 2.0s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          3306  FECHADA  mysql                 600.92  conexao recusada (RST recebido)
+127.0.0.1          8080  ABERTA   http-alt              601.13  conexao estabelecida (handshake completo)
+--------------------------------------------------------------------------------------------
+Resumo: 1 aberta(s), 1 fechada(s), 0 timeout(s), 0 erro(s) - 2 de 2 porta(s) testada(s) em 1.207 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+[codigo de saida: 0]
+--- Nmap nas mesmas condicoes (timeout adaptativo)
+
+$ nmap -sT --reason -p 8080,3306 127.0.0.1
+Starting Nmap 7.80 ( https://nmap.org ) at 2026-11-20 17:42 -03
+Nmap scan report for localhost (127.0.0.1)
+Host is up, received localhost-response (0.60s latency).
+
+PORT     STATE  SERVICE    REASON
+3306/tcp closed mysql      conn-refused
+8080/tcp open   http-proxy syn-ack
+
+Nmap done: 1 IP address (1 host up) scanned in 0.69 seconds
+[codigo de saida: 0]

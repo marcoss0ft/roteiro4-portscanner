@@ -1,0 +1,128 @@
+
+==================================================================
+## 7. Melhoria: execucao concorrente + medicao de desempenho + exportacao + log
+==================================================================
+--- 20 portas filtradas (DROP), timeout 0.5 s
+
+$ python3 portscanner.py 127.0.0.1 -p 9100-9119 -t 0.5 -w 1
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:43:00
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 20   Timeout: 0.5s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          9100  TIMEOUT  -                     501.38  sem resposta dentro do tempo limite
+127.0.0.1          9101  TIMEOUT  bacula-dir            501.12  sem resposta dentro do tempo limite
+127.0.0.1          9102  TIMEOUT  bacula-fd             501.08  sem resposta dentro do tempo limite
+127.0.0.1          9103  TIMEOUT  bacula-sd             501.74  sem resposta dentro do tempo limite
+127.0.0.1          9104  TIMEOUT  -                     501.77  sem resposta dentro do tempo limite
+127.0.0.1          9105  TIMEOUT  -                     501.04  sem resposta dentro do tempo limite
+127.0.0.1          9106  TIMEOUT  -                     501.69  sem resposta dentro do tempo limite
+127.0.0.1          9107  TIMEOUT  -                     501.48  sem resposta dentro do tempo limite
+127.0.0.1          9108  TIMEOUT  -                     501.34  sem resposta dentro do tempo limite
+127.0.0.1          9109  TIMEOUT  -                     501.43  sem resposta dentro do tempo limite
+127.0.0.1          9110  TIMEOUT  -                     501.46  sem resposta dentro do tempo limite
+127.0.0.1          9111  TIMEOUT  -                     501.71  sem resposta dentro do tempo limite
+127.0.0.1          9112  TIMEOUT  -                     502.18  sem resposta dentro do tempo limite
+127.0.0.1          9113  TIMEOUT  -                     501.82  sem resposta dentro do tempo limite
+127.0.0.1          9114  TIMEOUT  -                     500.54  sem resposta dentro do tempo limite
+127.0.0.1          9115  TIMEOUT  -                     501.55  sem resposta dentro do tempo limite
+127.0.0.1          9116  TIMEOUT  -                     501.76  sem resposta dentro do tempo limite
+127.0.0.1          9117  TIMEOUT  -                     501.70  sem resposta dentro do tempo limite
+127.0.0.1          9118  TIMEOUT  -                     501.18  sem resposta dentro do tempo limite
+127.0.0.1          9119  TIMEOUT  -                     500.96  sem resposta dentro do tempo limite
+--------------------------------------------------------------------------------------------
+Resumo: 0 aberta(s), 0 fechada(s), 20 timeout(s), 0 erro(s) - 20 de 20 porta(s) testada(s) em 10.035 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+[codigo de saida: 0]
+
+$ python3 portscanner.py 127.0.0.1 -p 9100-9119 -t 0.5 -w 20
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:43:10
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 20   Timeout: 0.5s   Workers: 20
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          9100  TIMEOUT  -                     503.02  sem resposta dentro do tempo limite
+127.0.0.1          9101  TIMEOUT  bacula-dir            502.62  sem resposta dentro do tempo limite
+127.0.0.1          9102  TIMEOUT  bacula-fd             501.50  sem resposta dentro do tempo limite
+127.0.0.1          9103  TIMEOUT  bacula-sd             501.30  sem resposta dentro do tempo limite
+127.0.0.1          9104  TIMEOUT  -                     501.35  sem resposta dentro do tempo limite
+127.0.0.1          9105  TIMEOUT  -                     501.47  sem resposta dentro do tempo limite
+127.0.0.1          9106  TIMEOUT  -                     501.63  sem resposta dentro do tempo limite
+127.0.0.1          9107  TIMEOUT  -                     501.45  sem resposta dentro do tempo limite
+127.0.0.1          9108  TIMEOUT  -                     501.57  sem resposta dentro do tempo limite
+127.0.0.1          9109  TIMEOUT  -                     501.39  sem resposta dentro do tempo limite
+127.0.0.1          9110  TIMEOUT  -                     502.69  sem resposta dentro do tempo limite
+127.0.0.1          9111  TIMEOUT  -                     501.94  sem resposta dentro do tempo limite
+127.0.0.1          9112  TIMEOUT  -                     504.19  sem resposta dentro do tempo limite
+127.0.0.1          9113  TIMEOUT  -                     502.24  sem resposta dentro do tempo limite
+127.0.0.1          9114  TIMEOUT  -                     505.99  sem resposta dentro do tempo limite
+127.0.0.1          9115  TIMEOUT  -                     503.21  sem resposta dentro do tempo limite
+127.0.0.1          9116  TIMEOUT  -                     503.16  sem resposta dentro do tempo limite
+127.0.0.1          9117  TIMEOUT  -                     501.70  sem resposta dentro do tempo limite
+127.0.0.1          9118  TIMEOUT  -                     502.10  sem resposta dentro do tempo limite
+127.0.0.1          9119  TIMEOUT  -                     501.44  sem resposta dentro do tempo limite
+--------------------------------------------------------------------------------------------
+Resumo: 0 aberta(s), 0 fechada(s), 20 timeout(s), 0 erro(s) - 20 de 20 porta(s) testada(s) em 0.527 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+[codigo de saida: 0]
+--- intervalo 1-5000 sequencial x concorrente (sem log/exportacao, para comparar so a varredura)
+
+$ python3 portscanner.py 127.0.0.1 -p 1-5000 -t 0.5 -w 1
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:43:11
+  [+] 2222/tcp ABERTA (-)
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 5000   Timeout: 0.5s   Workers: 1
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          2222  ABERTA   -                       0.29  conexao estabelecida (handshake completo)
+  ... 4999 portas FECHADAS omitidas (use -a para listar todas)
+--------------------------------------------------------------------------------------------
+Resumo: 1 aberta(s), 4999 fechada(s), 0 timeout(s), 0 erro(s) - 5000 de 5000 porta(s) testada(s) em 1.097 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+[codigo de saida: 0]
+
+$ python3 portscanner.py 127.0.0.1 -p 1-5000 -t 0.5 -w 50
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:43:12
+  [+] 2222/tcp ABERTA (-)
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 5000   Timeout: 0.5s   Workers: 50
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          2222  ABERTA   -                       9.87  conexao estabelecida (handshake completo)
+  ... 4999 portas FECHADAS omitidas (use -a para listar todas)
+--------------------------------------------------------------------------------------------
+Resumo: 1 aberta(s), 4999 fechada(s), 0 timeout(s), 0 erro(s) - 5000 de 5000 porta(s) testada(s) em 2.488 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+[codigo de saida: 0]
+--- exportacao CSV + log de execucao
+
+$ python3 portscanner.py 127.0.0.1 -p 1-5000 -t 0.5 -w 50 -o evidencias/scan_1-5000.csv --log evidencias/scan_1-5000.log
+Iniciando varredura TCP Connect em 127.0.0.1 (127.0.0.1) - 2026-11-20T17:43:15
+  [+] 2222/tcp ABERTA (-)
+
+Destino: 127.0.0.1 (127.0.0.1)   Portas solicitadas: 5000   Timeout: 0.5s   Workers: 50
+--------------------------------------------------------------------------------------------
+DESTINO           PORTA  ESTADO   SERVICO PROVAVEL*  TEMPO(ms)  DETALHE
+--------------------------------------------------------------------------------------------
+127.0.0.1          2222  ABERTA   -                       5.01  conexao estabelecida (handshake completo)
+  ... 4999 portas FECHADAS omitidas (use -a para listar todas)
+--------------------------------------------------------------------------------------------
+Resumo: 1 aberta(s), 4999 fechada(s), 0 timeout(s), 0 erro(s) - 5000 de 5000 porta(s) testada(s) em 9.650 s
+* servico normalmente associado a porta (/etc/services); nao confirma o servico real.
+Resultados exportados para evidencias/scan_1-5000.csv
+[codigo de saida: 0]
+
+$ head -5 evidencias/scan_1-5000.csv
+destino,ip,porta,estado,servico_provavel,tempo_ms,detalhe,inicio
+127.0.0.1,127.0.0.1,1,FECHADA,tcpmux,0.57,conexao recusada (RST recebido),2026-11-20T17:43:15
+127.0.0.1,127.0.0.1,2,FECHADA,-,0.45,conexao recusada (RST recebido),2026-11-20T17:43:15
+127.0.0.1,127.0.0.1,3,FECHADA,-,1.9,conexao recusada (RST recebido),2026-11-20T17:43:15
+127.0.0.1,127.0.0.1,4,FECHADA,-,2.97,conexao recusada (RST recebido),2026-11-20T17:43:15
+
+$ grep -v FECHADA evidencias/scan_1-5000.log
+2026-11-20 17:43:15,303 INFO inicio destino=127.0.0.1 ip=127.0.0.1 portas=1-5000 timeout=0.5 workers=50
+2026-11-20 17:43:19,102 INFO porta=2222 estado=ABERTA tempo_ms=5.01 detalhe=conexao estabelecida (handshake completo)
