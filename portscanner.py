@@ -212,9 +212,8 @@ def servico_provavel(porta):
 
     Atencao: getservbyport() NAO e thread-safe na glibc (usa um buffer estatico).
     Chamada a partir de varias threads, devolveu nomes corrompidos nos testes
-    (ex.: "# Local services
-"). Por isso so e chamada na thread principal,
-    depois da varredura, e o resultado e higienizado.
+    (ex.: "# Local services" seguido de quebra de linha). Por isso so e chamada
+    na thread principal, a medida que cada resultado chega, e o nome e higienizado.
     """
     try:
         nome = socket.getservbyport(porta, "tcp").strip()
